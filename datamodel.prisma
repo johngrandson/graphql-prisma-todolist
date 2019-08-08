@@ -1,0 +1,13 @@
+type User {
+  id: ID! @id
+  name: String!
+  email: String @unique
+  todos: [Todo!]!
+}
+
+type Todo {
+  id: ID! @id
+  title: String! @unique
+  done: Boolean!
+  owner: User @relation(link: INLINE)
+}
