@@ -1,77 +1,21 @@
 const { prisma } = require('./generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
+const Query = require('./resolvers/query')
+const Mutation = require('./resolvers/mutation')
+
+const { User, Todo } = require('./resolvers/models')
 
 const resolvers = {
-  Query: {
-    todosByValue(root, args, context) {
-      return context.prisma.todoes({ where: { done: args.value } })
-    },
-    todos(root, args, context) {
-      return context.prisma.todoes()
-    },
-    todo(root, args, context) {
-      return context.prisma.todo({ id: args.todoId })
-    },
-    todoByUser(root, args, context) {
-      return context.prisma.user({ id: args.userId }).todoes()
-    },
-    users(root, args, context) {
-      return context.prisma.users()
-    }
-  },
-  Mutation: {
-    createUser(root, args, context) {
-      return context.prisma.createUser({
-        name: args.name
-      })
-    },
-    createTodo(root, args, context) {
-      return context.prisma.createTodo({
-        title: args.title,
-        owner: {
-          connect: { id: args.userId }
-        },
-      })
-    },
-    makeDone(root, args, context) {
-      return context.prisma.updateTodo({
-        where: { id: args.todoId },
-        data: { done: true }
-      })
-    },
-    removeUser(root, args, context) {
-      return context.prisma.deleteUser({
-        where: { id: args.userId }
-      })
-    },
-    removeTodo(root, args, context) {
-      return context.prisma.deleteTodo({
-        id: args.todoId
-      })
-    }
-  },
-  User: {
-    todos(root, args, context) {
-      return context.prisma
-        .user({
-          id: root.id
-        })
-        .todoes()
-    },
-  },
-  Todo: {
-    owner(root, args, context) {
-      return context.prisma
-        .todo({
-          id: root.id
-        })
-        .owner()
-    },
-  },
+  Query,
+  Mutation,
+  User,
+  Todo,
 }
 
 const server = new GraphQLServer({
-  typeDefs: './schema.graphql',
+  // The typeDefs constant defines your GraphQL schema 
+  typeDefs: './schema/schema.graphql',
+  // The resolvers object is the actual implementation of the GraphQL schema
   resolvers,
   context: {
     prisma,
