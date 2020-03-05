@@ -2,6 +2,7 @@ const { prisma } = require('./generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
 const Query = require('./resolvers/query')
 const Mutation = require('./resolvers/mutation')
+const typeDefs = require('./schema/');
 
 const { User, Todo } = require('./resolvers/models')
 
@@ -13,8 +14,8 @@ const resolvers = {
 }
 
 const server = new GraphQLServer({
-  // The typeDefs constant defines your GraphQL schema 
-  typeDefs: './schema/schema.graphql',
+  // The typeDefs constant defines your GraphQL schema
+  typeDefs,
   // The resolvers object is the actual implementation of the GraphQL schema
   resolvers,
   context: {
